@@ -29,20 +29,30 @@ const crearNuevaLinea = (nombre, email) => {
 
 const table = document.querySelector("[data-table]")
 
-const http = new XMLHttpRequest();
+const listaClientes = () => {
+    const promise = new Promise((resolve, reject) => {
+        const http = new XMLHttpRequest();
+        // Abrir http (método, url)
+        http.open('GET', "http://localhost:3000/perfil");
 
-// Abrir http (método, url)
-http.open('GET', "http://localhost:3000/perfil");
+        http.send();
 
-http.send();
+        http.onload = () => {
+            const response = JSON.parse(http.response); // transformar la respuesta http a Json
+            if(http.status >= 400){ // Si es verdad quiere decir que hay un error con nuestra petición
+                reject(response);
+            }else{
+                resolve(response);
+            }
+        };
+    });
+    return promise;
+};
 
-http.onload = () => {
-    const data = JSON.parse(http.response); // transformar la respuesta http a Json
-    console.log(data);
+listaClientes().then((data) => {
     data.forEach(perfil => {
         const nuevaLinea = crearNuevaLinea(perfil.nombre, perfil.email);
         table.appendChild(nuevaLinea);
     });
-}
+}).catch((error) => alert("Ocurrió un error"));
 
-console.log(http);
