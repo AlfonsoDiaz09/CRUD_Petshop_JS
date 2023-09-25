@@ -29,25 +29,15 @@ const crearNuevaLinea = (nombre, email) => {
 
 const table = document.querySelector("[data-table]")
 
-const listaClientes = () => {
-    const promise = new Promise((resolve, reject) => {
-        const http = new XMLHttpRequest();
-        // Abrir http (método, url)
-        http.open('GET', "http://localhost:3000/perfil");
+// Opción en 5 líneas de código
+// const listaClientes = () => {
+//     return fetch("http://localhost:3000/perfil").then(respuesta => {
+//         return respuesta.json();
+//     });
+// };
 
-        http.send();
-
-        http.onload = () => {
-            const response = JSON.parse(http.response); // transformar la respuesta http a Json
-            if(http.status >= 400){ // Si es verdad quiere decir que hay un error con nuestra petición
-                reject(response);
-            }else{
-                resolve(response);
-            }
-        };
-    });
-    return promise;
-};
+// Opción en una línea
+const listaClientes = () => fetch("http://localhost:3000/perfil").then(respuesta => respuesta.json());
 
 listaClientes().then((data) => {
     data.forEach(perfil => {
